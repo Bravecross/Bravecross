@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("../public/fonts/PlusJakartaSans.ttf") format("truetype");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: block;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}

@@ -1,0 +1,54 @@
+{
+  "brand": {
+    "name": "Fluxo",
+    "logoSrc": "brand/logo.svg",
+    "colors": {
+      "background": "#0D7377",
+      "backgroundAccent": "#095E61",
+      "surface": "#FFFFFF",
+      "surfaceMuted": "#F3F7F7",
+      "text": "#14212B",
+      "textMuted": "#5B6B75",
+      "accent": "#FF6B35",
+      "success": "#22A06B",
+      "columnHeader": "#0B5F63",
+      "shadow": "rgba(8, 40, 44, 0.28)"
+    },
+    "typography": {
+      "fontFamily": "Plus Jakarta Sans",
+      "fontFile": "fonts/PlusJakartaSans.ttf"
+    },
+    "radii": {
+      "card": 16,
+      "column": 20,
+      "badge": 999,
+      "button": 14
+    },
+    "shadows": {
+      "card": "0 8px 20px rgba(8, 40, 44, 0.12)",
+      "cardLifted": "0 28px 48px rgba(8, 40, 44, 0.32)",
+      "board": "0 24px 60px rgba(8, 40, 44, 0.28)"
+    }
+  },
+  "headline": "Organize seu pipeline em segundos",
+  "ctaLabel": "Teste grátis",
+  "columns": [
+    {"id": "lead", "title": "Qualificação"},
+    {"id": "proposta", "title": "Proposta feita"},
+    {"id": "ganho", "title": "Ganho"}
+  ],
+  "deal": {
+    "id": "deal-hero",
+    "title": "Negócio Casa Rio",
+    "value": "R$ 15.000",
+    "company": "Casa Rio Ltda",
+    "fromColumn": 1,
+    "toColumn": 2
+  },
+  "staticCards": [
+    {"id": "s1", "title": "Lead Oficina Sul", "value": "R$ 4.200", "column": 0},
+    {"id": "s2", "title": "Projeto Atlas", "value": "R$ 9.800", "column": 0},
+    {"id": "s3", "title": "Contrato Verde", "value": "R$ 22.000", "column": 1}
+  ],
+  "showAudio": true
+}
