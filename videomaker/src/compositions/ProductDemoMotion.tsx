@@ -14,11 +14,11 @@ import {
 import {useBrandFont} from "../brand/useBrandFont";
 import type {ProductDemoProps} from "../props/productDemo";
 
-const BOARD_TOP = 280;
-const BOARD_SIDE = 52;
-const COLUMN_GAP = 18;
-const CARD_HEIGHT = 118;
-const CURSOR_SIZE = 72;
+const BOARD_TOP = 340;
+const BOARD_SIDE = 40;
+const COLUMN_GAP = 16;
+const CARD_HEIGHT = 132;
+const CURSOR_SIZE = 78;
 
 type Point = {x: number; y: number};
 
@@ -52,23 +52,26 @@ const DealCardView: React.FC<{
         height: CARD_HEIGHT,
         borderRadius: brand.radii.card,
         background: brand.colors.surface,
-        boxShadow: lifted ? brand.shadows.cardLifted : brand.shadows.card,
-        padding: "16px 18px",
+        boxShadow: lifted
+          ? "0 36px 64px rgba(8, 40, 44, 0.42), 0 8px 16px rgba(8, 40, 44, 0.18)"
+          : brand.shadows.card,
+        padding: "18px 20px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
         transform: `scale(${scale}) rotate(${rotate}deg)`,
         opacity,
         transformOrigin: "center center",
+        willChange: "transform",
       }}
     >
       <div>
         <div
           style={{
-            fontSize: 22,
+            fontSize: 24,
             fontWeight: 700,
             color: brand.colors.text,
-            letterSpacing: -0.3,
+            letterSpacing: -0.35,
             lineHeight: 1.15,
           }}
         >
@@ -77,8 +80,8 @@ const DealCardView: React.FC<{
         {company ? (
           <div
             style={{
-              marginTop: 6,
-              fontSize: 15,
+              marginTop: 8,
+              fontSize: 16,
               color: brand.colors.textMuted,
               fontWeight: 500,
             }}
@@ -96,7 +99,7 @@ const DealCardView: React.FC<{
       >
         <span
           style={{
-            fontSize: 20,
+            fontSize: 22,
             fontWeight: 700,
             color: brand.colors.columnHeader,
           }}
@@ -105,8 +108,8 @@ const DealCardView: React.FC<{
         </span>
         <span
           style={{
-            width: 28,
-            height: 8,
+            width: 32,
+            height: 9,
             borderRadius: brand.radii.badge,
             background: brand.colors.surfaceMuted,
           }}
@@ -159,33 +162,51 @@ const SuccessBadge: React.FC<{
   brand: ProductDemoProps["brand"];
 }> = ({progress, brand}) => {
   const scale = spring({
-    frame: Math.round(progress * 20),
+    frame: Math.round(progress * 22),
     fps: 30,
-    config: {damping: 12, stiffness: 160, mass: 0.6},
+    config: {damping: 11, stiffness: 180, mass: 0.55},
   });
+  const ring = interpolate(progress, [0, 1], [0.6, 1.55]);
+  const ringOpacity = interpolate(progress, [0, 0.35, 1], [0.55, 0.35, 0]);
   return (
-    <div
-      style={{
-        position: "absolute",
-        right: -10,
-        top: -14,
-        width: 44,
-        height: 44,
-        borderRadius: 22,
-        background: brand.colors.success,
-        color: "#fff",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: 24,
-        fontWeight: 800,
-        transform: `scale(${Math.max(scale * progress, 0)})`,
-        boxShadow: "0 10px 24px rgba(34,160,107,0.4)",
-        zIndex: 20,
-      }}
-    >
-      ✓
-    </div>
+    <>
+      <div
+        style={{
+          position: "absolute",
+          right: -18,
+          top: -22,
+          width: 56,
+          height: 56,
+          borderRadius: 28,
+          border: `3px solid ${brand.colors.success}`,
+          opacity: ringOpacity,
+          transform: `scale(${ring})`,
+          zIndex: 19,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          right: -10,
+          top: -14,
+          width: 48,
+          height: 48,
+          borderRadius: 24,
+          background: brand.colors.success,
+          color: "#fff",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 26,
+          fontWeight: 800,
+          transform: `scale(${Math.max(scale * progress, 0)})`,
+          boxShadow: "0 12px 28px rgba(34,160,107,0.45)",
+          zIndex: 20,
+        }}
+      >
+        ✓
+      </div>
+    </>
   );
 };
 
@@ -207,11 +228,11 @@ export const ProductDemoMotion: React.FC<ProductDemoProps> = (props) => {
   const cardYInColumn = (slot: number) =>
     BOARD_TOP + 78 + slot * (CARD_HEIGHT + 14);
 
-  const liftStart = 130;
-  const dragStart = 165;
-  const dropAt = 275;
-  const successAt = 288;
-  const ctaAt = 318;
+  const liftStart = 110;
+  const dragStart = 145;
+  const dropAt = 255;
+  const successAt = 268;
+  const ctaAt = 300;
 
   const boardEnter = spring({
     frame,
@@ -267,7 +288,7 @@ export const ProductDemoMotion: React.FC<ProductDemoProps> = (props) => {
 
   const dragX = interpolate(dragT, [0, 1], [fromX, toX]);
   const dragY =
-    interpolate(dragT, [0, 1], [fromY, toY]) - Math.sin(dragT * Math.PI) * 48;
+    interpolate(dragT, [0, 1], [fromY, toY]) - Math.sin(dragT * Math.PI) * 72;
 
   const settle = spring({
     frame: Math.max(0, frame - dropAt),
@@ -284,22 +305,22 @@ export const ProductDemoMotion: React.FC<ProductDemoProps> = (props) => {
         : interpolate(settle, [0, 1], [toY - 8, toY]);
 
   const heroScale = isLifted
-    ? interpolate(liftSpring, [0, 1], [1, 1.08])
+    ? interpolate(liftSpring, [0, 1], [1, 1.12])
     : frame >= dropAt
-      ? interpolate(settle, [0, 1], [1.08, 1])
+      ? interpolate(settle, [0, 1], [1.12, 1])
       : 1;
 
   const heroRotate = isDragging
-    ? interpolate(dragT, [0, 0.5, 1], [0, -7, 3])
+    ? interpolate(dragT, [0, 0.45, 1], [-2, -11, 5])
     : frame >= dropAt
-      ? interpolate(settle, [0, 1], [3, 0])
-      : interpolate(liftSpring, [0, 1], [0, -4]) * (isLifted ? 1 : 0);
+      ? interpolate(settle, [0, 1], [5, 0])
+      : interpolate(liftSpring, [0, 1], [0, -6]) * (isLifted ? 1 : 0);
 
   const cursorAppear = clamp01(
-    interpolate(frame, [88, 105], [0, 1], {extrapolateRight: "clamp"}),
+    interpolate(frame, [72, 92], [0, 1], {extrapolateRight: "clamp"}),
   );
   const cursorExit = clamp01(
-    interpolate(frame, [300, 320], [1, 0], {
+    interpolate(frame, [278, 298], [1, 0], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     }),
@@ -308,12 +329,12 @@ export const ProductDemoMotion: React.FC<ProductDemoProps> = (props) => {
   const cursorTarget: Point =
     frame < liftStart
       ? {
-          x: interpolate(frame, [88, liftStart], [width * 0.72, fromX + 70], {
+          x: interpolate(frame, [72, liftStart], [width * 0.72, fromX + 70], {
             extrapolateLeft: "clamp",
             extrapolateRight: "clamp",
             easing: Easing.out(Easing.cubic),
           }),
-          y: interpolate(frame, [88, liftStart], [BOARD_TOP + 420, fromY + 40], {
+          y: interpolate(frame, [72, liftStart], [BOARD_TOP + 420, fromY + 40], {
             extrapolateLeft: "clamp",
             extrapolateRight: "clamp",
             easing: Easing.out(Easing.cubic),
@@ -322,10 +343,10 @@ export const ProductDemoMotion: React.FC<ProductDemoProps> = (props) => {
       : frame < dropAt
         ? {x: heroX + 78, y: heroY + 52}
         : {
-            x: interpolate(frame, [dropAt, 300], [toX + 78, toX + 110], {
+            x: interpolate(frame, [dropAt, 278], [toX + 78, toX + 110], {
               extrapolateRight: "clamp",
             }),
-            y: interpolate(frame, [dropAt, 300], [toY + 52, toY + 90], {
+            y: interpolate(frame, [dropAt, 278], [toY + 52, toY + 90], {
               extrapolateRight: "clamp",
             }),
           };
@@ -345,10 +366,14 @@ export const ProductDemoMotion: React.FC<ProductDemoProps> = (props) => {
   });
 
   const panX = isDragging
-    ? interpolate(dragT, [0, 1], [0, -36])
+    ? interpolate(dragT, [0, 1], [0, -48])
     : frame >= dropAt
-      ? interpolate(settle, [0, 1], [-36, 0])
+      ? interpolate(settle, [0, 1], [-48, 0])
       : 0;
+
+  const boardScale = isDragging
+    ? interpolate(dragT, [0, 0.5, 1], [1, 1.02, 1.015])
+    : 1;
 
   const headlineOpacity = interpolate(frame, [24, 48], [0, 1], {
     extrapolateLeft: "clamp",
@@ -423,12 +448,13 @@ export const ProductDemoMotion: React.FC<ProductDemoProps> = (props) => {
           width,
           height,
           opacity: boardOpacity,
-          transform: `translate(${panX}px, ${boardY}px)`,
+          transform: `translate(${panX}px, ${boardY}px) scale(${boardScale})`,
+          transformOrigin: "50% 40%",
         }}
       >
         {columns.map((col, i) => {
           const colAppear = spring({
-            frame: Math.max(0, frame - (18 + i * 6)),
+            frame: Math.max(0, frame - (12 + i * 5)),
             fps,
             config: {damping: 16, stiffness: 110},
           });
@@ -443,15 +469,17 @@ export const ProductDemoMotion: React.FC<ProductDemoProps> = (props) => {
                 left: columnX(i),
                 top: BOARD_TOP,
                 width: columnWidth,
-                height: 620,
+                height: 720,
                 borderRadius: brand.radii.column,
                 background: highlight
-                  ? "rgba(255,255,255,0.22)"
-                  : "rgba(255,255,255,0.14)",
+                  ? "rgba(255,255,255,0.28)"
+                  : "rgba(255,255,255,0.15)",
                 border: highlight
-                  ? "2px solid rgba(255,255,255,0.55)"
-                  : "1px solid rgba(255,255,255,0.22)",
-                boxShadow: brand.shadows.board,
+                  ? `2.5px solid ${brand.colors.accent}`
+                  : "1px solid rgba(255,255,255,0.24)",
+                boxShadow: highlight
+                  ? `0 0 0 6px rgba(255,107,53,0.18), ${brand.shadows.board}`
+                  : brand.shadows.board,
                 padding: 12,
                 opacity: colAppear,
                 transform: `translateY(${interpolate(colAppear, [0, 1], [30, 0])}px) scale(${interpolate(colAppear, [0, 1], [0.96, 1])})`,
@@ -551,7 +579,7 @@ export const ProductDemoMotion: React.FC<ProductDemoProps> = (props) => {
           position: "absolute",
           left: 0,
           right: 0,
-          bottom: 160,
+          bottom: 120,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
